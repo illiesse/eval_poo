@@ -30,8 +30,6 @@ class Events {
 
 	protected $idAgenda=null;
 
-	protected $name=null;
-
 
 	function __construct($id=null) {
 		if(!empty($id)){
@@ -68,54 +66,54 @@ class Events {
 	}
 
 	public static function findAllbyDate($filters=[]) {
-		// var_dump($filters);
+		var_dump($filters);
 		$bdd = BDD::getConnexion();
-
-		$clauses=[];
-		foreach ($filters as $k => $f) {
-			$clauses[]= $k.'='.$bdd->quote($f);
+		$k='dateTime';
+		if(!empty($filters)){
+			$where= 'WHERE DATE('.$k.')= "'.$filters.'"';
+			$query = 'SELECT * FROM agenda.events '.$where;
+			var_dump($query);
+			$res=$bdd->query($query);
+			return $res->fetchAll(PDO::FETCH_CLASS, 'Events');
 		}
-		// var_dump($clauses);
-		// var_dump($k);
-		$where='';
-		if(!empty($clauses)){
-			$where= 'WHERE DATE('.$k.')= "'.$f.'"';
+		else{
+			return null;
 		}
-		$query = 'SELECT * FROM agenda.events '.$where;
-		var_dump($query);
-		$res=$bdd->query($query);
-		return $res->fetchAll(PDO::FETCH_CLASS, 'Events');
 	}
 
 	public static function findOne($filters=[]) {
 		// var_dump($filters);
-		$bdd = BDD::getConnexion();
-
-		$clauses=[];
-		foreach ($filters as $k => $f) {
-			$clauses[]= $k.'='.$bdd->quote($f);
+		if(is_array($filters)){
+			$bdd = BDD::getConnexion();
+			$clauses=[];
+			foreach ($filters as $k => $f) {
+				$clauses[]= $k.'='.$bdd->quote($f);
+			}
+			// var_dump($clauses);
+			$where='';
+			if(!empty($clauses)){
+				$where= 'WHERE '.implode(' AND ', $clauses);
+			}
+			$query = 'SELECT * FROM agenda.events '.$where;
+			// var_dump($query);
+			$res=$bdd->query($query);
+			$res->setFetchMode(PDO::FETCH_CLASS, 'Events');
+			return $res->fetch();
 		}
-		// var_dump($clauses);
-		$where='';
-		if(!empty($clauses)){
-			$where= 'WHERE '.implode(' AND ', $clauses);
+		else{
+			return null;
 		}
-		$query = 'SELECT * FROM agenda.events '.$where;
-		// var_dump($query);
-		$res=$bdd->query($query);
-		$res->setFetchMode(PDO::FETCH_CLASS, 'Events');
-		return $res->fetch();
 	}
 
 	public function allPeoples($filters=[]) {
-		// var_dump($filters);
+		var_dump($filters);
 		$bdd = BDD::getConnexion();
 		$query = 'SELECT *
-					FROM agenda.events as ae
-					INNER JOIN agenda.event_people as aep ON ae.id=aep.idEvent
-					INNER JOIN agenda.people as ap ON aep.idPeople=ap.id
-					WHERE ae.id='.$this->id;
-		// var_dump($query);
+				FROM agenda.events as ae
+				INNER JOIN agenda.event_people as aep ON ae.id=aep.idEvent
+				INNER JOIN agenda.people as ap ON aep.idPeople=ap.id
+				WHERE ae.id='.$this->id;
+		var_dump($query);
 		$res = $bdd->query($query);
 		// var_dump($query);
 		return $res->fetchAll(PDO::FETCH_CLASS, 'Events');

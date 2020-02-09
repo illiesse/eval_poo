@@ -40,7 +40,7 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
-INSERT INTO `events` VALUES (1,'waterfiesta','2020-03-06',240,1),(2,'firefiesta','2020-07-13',190,1),(3,'coldfiesta','2020-12-20',200,2),(4,'hotfiesta','2020-06-05',300,1),(5,'littlefiesta','2020-03-06',60,2);
+INSERT INTO `events` VALUES (1,'waterfiesta','2020-03-06',240,1),(2,'firefiesta','2020-07-13',190,1),(3,'coldfiesta','2020-12-20',200,2),(4,'hotfiesta','2020-03-06',300,1),(5,'littlefiesta','2020-03-06',60,2);
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-09  2:57:34
+-- Dump completed on 2020-02-09 23:50:58

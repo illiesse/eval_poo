@@ -33,22 +33,26 @@ class People {
 
 	public static function findOne($filters=[]) {
 		// var_dump($filters);
-		$bdd = BDD::getConnexion();
-
-		$clauses=[];
-		foreach ($filters as $k => $f) {
-			$clauses[]= $k.'='.$bdd->quote($f);
+		if(is_array($filters)){
+			$bdd = BDD::getConnexion();
+			$clauses=[];
+			foreach ($filters as $k => $f) {
+				$clauses[]= $k.'='.$bdd->quote($f);
+			}
+			// var_dump($clauses);
+			$where='';
+			if(!empty($clauses)){
+				$where= 'WHERE '.implode(' AND ', $clauses);
+			}
+			$query = 'SELECT * FROM agenda.people '.$where.' LIMIT 0,1';
+			// var_dump($query);
+			$res=$bdd->query($query);
+			$res->setFetchMode(PDO::FETCH_CLASS, 'People');
+			return $res->fetch();
 		}
-		// var_dump($clauses);
-		$where='';
-		if(!empty($clauses)){
-			$where= 'WHERE '.implode(' AND ', $clauses);
+		else{
+			return null;
 		}
-		$query = 'SELECT * FROM agenda.people '.$where.' LIMIT 0,1';
-		// var_dump($query);
-		$res=$bdd->query($query);
-		$res->setFetchMode(PDO::FETCH_CLASS, 'People');
-		return $res->fetch();
 	}
 
 	public function getAllEvents($filters=[]) {
@@ -59,13 +63,18 @@ class People {
 			$clauses[]= $k.'='.$bdd->quote($f);
 		}
 		$k="dateTime";
-		$query = 'SELECT *
+		if(!empty($f)){
+			$query = 'SELECT *
 					FROM agenda.events as ae
 					INNER JOIN agenda.event_people as aep ON ae.id=aep.idEvent
 					INNER JOIN agenda.people as ap ON aep.idPeople=ap.id
 					WHERE name="'.$this->name.'" AND DATE('.$k.')= "'.$f.'"';
-		$res = $bdd->query($query);
-		var_dump($query);
-		return $res->fetchAll(PDO::FETCH_CLASS, 'People');
+			$res = $bdd->query($query);
+			var_dump($query);
+			return $res->fetchAll(PDO::FETCH_CLASS, 'People');
+		}
+		else{
+			return null;
+		}
 	}
 }
