@@ -10,6 +10,5 @@ require_once("bdd.php");
 // var_dump(Events::findAllbyDate('2020-03-06'));
 
 // var_dump(Events::findOne()->allPeoples());
-var_dump(Events::allPeoples());
 
 // var_dump(People::findOne(['name'=>'joe'])->getAllEvents(['date'=>'2020-03-06']));
