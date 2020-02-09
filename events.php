@@ -30,6 +30,8 @@ class Events {
 
 	protected $idAgenda=null;
 
+	protected $name=null;
+
 
 	function __construct($id=null) {
 		if(!empty($id)){
@@ -46,7 +48,7 @@ class Events {
 		}
 	}
 
-	public static function getAllEvents($filters=[]) {
+	public static function findAll($filters=[]) {
 		var_dump($filters);
 		$bdd = BDD::getConnexion();
 
@@ -73,8 +75,8 @@ class Events {
 		foreach ($filters as $k => $f) {
 			$clauses[]= $k.'='.$bdd->quote($f);
 		}
-		var_dump($clauses);
-		var_dump($k);
+		// var_dump($clauses);
+		// var_dump($k);
 		$where='';
 		if(!empty($clauses)){
 			$where= 'WHERE DATE('.$k.')= "'.$f.'"';
@@ -105,4 +107,17 @@ class Events {
 		return $res->fetch();
 	}
 
+	public function allPeoples($filters=[]) {
+		// var_dump($filters);
+		$bdd = BDD::getConnexion();
+		$query = 'SELECT *
+					FROM agenda.events as ae
+					INNER JOIN agenda.event_people as aep ON ae.id=aep.idEvent
+					INNER JOIN agenda.people as ap ON aep.idPeople=ap.id
+					WHERE ae.id='.$this->id;
+		// var_dump($query);
+		$res = $bdd->query($query);
+		// var_dump($query);
+		return $res->fetchAll(PDO::FETCH_CLASS, 'Events');
+	}
 }
